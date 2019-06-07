@@ -20,6 +20,3 @@ python bin/logicsv.py --file "order.csv"
 
 ### 見方
 ![画像](https://raw.githubusercontent.com/Hajimex/acp_RPA/master/src/Screen_Shot_2019-06-08_at_0_55_04.png?token=AAKXSPIL4J7FZ6MK6D2GTQK5APC2E "画像")
-# ACP_RPA
-# ACP_RPA
-# ACP_RPA
