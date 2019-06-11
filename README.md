@@ -19,7 +19,10 @@ python bin/logicsv.py --file "order.csv"
 3. output.sjis.csvというファイルが完成品です
 
 ### 見方
+1. BG列を見てFALSEなら、都道府県列を直す。
+2. BM列を見て0なら、市区町村レベルと町域レベルを直す。
+3. それを元のCSVに貼る。
+4. 元のCSVでテスト行を削除する。
+
 ![画像](https://raw.githubusercontent.com/Hajimex/acp_RPA/master/src/Screen_Shot_2019-06-08_at_0_55_04.png?token=AAKXSPIL4J7FZ6MK6D2GTQK5APC2E "画像")
-# ACP_RPA
-# ACP_RPA
-# ACP_RPA
+

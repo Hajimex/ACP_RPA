@@ -3,28 +3,27 @@ import sys
 import argparse
 import csv
 import pandas as pd
+import codecs
+import math
 
 def Read_File(f):
 	file_path = "data/" + f
 
-	df = pd.read_csv(file_path, encoding="SHIFT-JIS")
-	df.to_csv("data/utf-8_" + f, encoding='utf-8',index=False) 
-	df = pd.read_csv("data/utf-8_" + f, encoding="utf-8")
+	with codecs.open(file_path, "r", "Shift-JIS", "ignore") as file:
+		df = pd.read_table(file, delimiter=",")
+		df.to_csv("data/utf-8_" + f, encoding='utf-8',index=False) 
+		df = pd.read_csv("data/utf-8_" + f, encoding="utf-8")
 
-	return df
-
-def If_Test(df,test_names,test_products):
-	#もし注文者名に特定文字が含まれているか、商品SKUがテスト商品のSKUだったら行削除
-	for test_name in test_names:
-		df = df[~(df["Billing Name"].str.contains(test_name))]
-	for test_product in test_products:
-		df = df[~(df["Lineitem sku"]==test_product)]
 	return df
 
 def Shipping_Method(df,yupacket_products):
 	#もしSKUが特定のものだったら、ゆうパケット、それ以外だったらゆうパック
 	for yupacket_product in yupacket_products:
-		df['Shipping Method'].mask(df['Shipping Method'] == yupacket_product, u"ゆうパケット")
+		for index, row in df.iterrows():
+			if df.at[index,'Lineitem sku']==yupacket_product:
+				df.at[index,'Shipping Method']=u"ゆうパケット"
+			else:
+				df.at[index,'Shipping Method']=u"ゆうパック"
 	return df
 
 def Validate_Address(df):
@@ -67,6 +66,8 @@ def Validate_Address(df):
 		# 町名と前方一致
 		Shipping_Street_Series = df['Shipping_Street'].str.startswith(df.at[index,'Shipping_Street_T'])
 		# 市区町村に含まれるか
+		if type(df.at[index,'Shipping_Street_T']) is float and math.isnan(df.at[index,'Shipping_Street_T']):
+			df.at[index,'Shipping_Street_T'] = ""
 		Shipping_City_Series = df['Shipping_City'].str.contains(df.at[index,'Shipping_Street_T'])
 		if Shipping_Street_Series[index] == False and Shipping_City_Series[index] == False:
 			df.at[index,'Shipping_Street_Is_Correct'] = False
@@ -76,15 +77,26 @@ def Validate_Address(df):
 
 	return df
 
+def If_Test(df,test_names,test_products):
+	#もし注文者名に特定文字が含まれているか、商品SKUがテスト商品のSKUだったら住所欄をテストにする
+	for test_name in test_names:
+		# print(df['Billing Name'].str.contains(test_name))
+		df.loc[df['Billing Name'].str.contains(test_name), 'Shipping_Province'] = u"テスト"
+	for test_product in test_products:
+		# print(df['Lineitem sku']==test_product)
+		df.loc[df['Lineitem sku']==test_product, 'Shipping_Province'] = u"テスト"
+
+	return df
+
 def Output(df):
 	df.to_csv("output.sjis.csv", encoding="shift_jis", index=False)
 	return df
 
 def main(f,test_names,test_products,yupacket_products):
 	df = Read_File(f)
-	df = If_Test(df,test_names,test_products)
 	df = Shipping_Method(df,yupacket_products)
 	df = Validate_Address(df)
+	df = If_Test(df,test_names,test_products)
 	df = Output(df)
 
 if __name__ == "__main__":
