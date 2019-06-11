@@ -4,7 +4,7 @@
 # 各モジュール使い方
 ## ロジデータアップ前データ修正
 ### 
-テスト購入行削除、ゆうパックかゆうパケット自動判別、住所エラーはもうじき完了
+テスト購入行削除、ゆうパックかゆうパケット自動判別、住所エラーは下記の見方を参照
 
 ### コマンド
 1. JapanOrderSystemCSVからダウンロードされたデータをdataフォルダ以下に一旦格納
@@ -26,3 +26,5 @@ python bin/logicsv.py --file "order.csv"
 
 ![画像](https://raw.githubusercontent.com/Hajimex/acp_RPA/master/src/Screen_Shot_2019-06-08_at_0_55_04.png?token=AAKXSPIL4J7FZ6MK6D2GTQK5APC2E "画像")
 
+=======
+＊個人情報はダミーを利用しています
