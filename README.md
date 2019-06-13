@@ -11,6 +11,7 @@
 2. 下記のコマンドを打つ
 ```
 python bin/logicsv.py --file "ファイル名.csv"
+＊環境によってはsudo python bin/logicsv.py --file "ファイル名.csv"
 ```
 （サンプル）
 ```

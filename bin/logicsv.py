@@ -10,7 +10,7 @@ def Read_File(f):
 	file_path = "data/" + f
 
 	with codecs.open(file_path, "r", "Shift-JIS", "ignore") as file:
-		df = pd.read_table(file, delimiter=",")
+		df = pd.read_csv(file, delimiter=",")
 		df.to_csv("data/utf-8_" + f, encoding='utf-8',index=False) 
 		df = pd.read_csv("data/utf-8_" + f, encoding="utf-8")
 
@@ -70,9 +70,9 @@ def Validate_Address(df):
 			df.at[index,'Shipping_Street_T'] = ""
 		Shipping_City_Series = df['Shipping_City'].str.contains(df.at[index,'Shipping_Street_T'])
 		if Shipping_Street_Series[index] == False and Shipping_City_Series[index] == False:
-			df.at[index,'Shipping_Street_Is_Correct'] = False
+			df.at[index,'Shipping_Street_Is_Correct'] = 0
 		else:
-			df.at[index,'Shipping_Street_Is_Correct'] = True
+			df.at[index,'Shipping_Street_Is_Correct'] = 1
 		df['Shipping_Street_Is_Correct'].astype(bool)
 
 	return df
