@@ -1,5 +1,5 @@
 # coding:utf-8
-import sys
+import sys, os
 import argparse
 import csv
 import pandas as pd
@@ -10,9 +10,9 @@ def Read_File(f):
 	file_path = "data/" + f
 
 	with codecs.open(file_path, "r", "Shift-JIS", "ignore") as file:
-		df = pd.read_csv(file, delimiter=",")
+		df = pd.read_csv(file, delimiter=",", dtype={"Shipping Street":str})
 		df.to_csv("data/utf-8_" + f, encoding='utf-8',index=False) 
-		df = pd.read_csv("data/utf-8_" + f, encoding="utf-8")
+		df = pd.read_csv("data/utf-8_" + f, encoding="utf-8", dtype={"Shipping Street":str})
 
 	return df
 
@@ -75,12 +75,14 @@ def Validate_Address(df):
 			df.at[index,'Shipping_Street_Is_Correct'] = 1
 		df['Shipping_Street_Is_Correct'].astype(bool)
 
+	df['Shipping Street'] = df['Shipping Street'].replace('^', '\'', regex=True)
+	df['Shipping_Street'] = df['Shipping_Street'].replace('^', '\'', regex=True)
+
 	return df
 
 def If_Test(df,test_names,test_products):
 	#もし注文者名に特定文字が含まれているか、商品SKUがテスト商品のSKUだったら住所欄をテストにする
 	for test_name in test_names:
-		# print(df['Billing Name'].str.contains(test_name))
 		df.loc[df['Billing Name'].str.contains(test_name), 'Shipping_Province'] = u"テスト"
 	for test_product in test_products:
 		# print(df['Lineitem sku']==test_product)
@@ -98,16 +100,16 @@ def main(f,test_names,test_products,yupacket_products):
 	df = Validate_Address(df)
 	df = If_Test(df,test_names,test_products)
 	df = Output(df)
+	hello()
 
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(description='enter the value')
-	parser.add_argument('--file', help='file name')    # 必須の引数を追加
-	# parser.add_argument('arg2', help='foooo')
+	parser.add_argument('--file', help='file name')
 
-	test_names = [u"テスト"] #配列にするs
-	test_products = ["SFwtest","SFwtests"] #配列にする
-	yupacket_products = ["SFwo002s"] #配列にする
+	test_names = [u"テスト"]
+	test_products = ["SFwtest","SFwtests"]
+	yupacket_products = ["SFwo002s"]
 	args = parser.parse_args()
 	print("args.file",args.file)
 
