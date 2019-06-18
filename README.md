@@ -29,3 +29,8 @@ python bin/logicsv.py --file "order.csv"
 
 =======
 ＊個人情報はダミーを利用しています
+
+### 動作環境
+1. Python2.7が動く環境
+2. requirements.txtのモジュールがインストールされていること
+
