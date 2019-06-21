@@ -40,6 +40,14 @@ python bin/logicsv.py --file "order.csv"
 
 ![画像](https://raw.githubusercontent.com/Hajimex/acp_RPA/master/src/Screen_Shot_2019-06-08_at_0_55_04.png?token=AAKXSPIL4J7FZ6MK6D2GTQK5APC2E "画像")
 
+### 別バージョンのインターフェース
+下記のコマンドを用いることで、簡潔なファイルをアウトプットすることが可能です
+```
+python bin/logicsv.py --file "order.csv" --interface short
+環境によってはsudo python bin/logicsv.py --file "order.csv" --interface short
+```
+![画像](https://github.com/Hajimex/ACP_RPA/blob/master/src/Screen_Shot_2019-06-21_at_23_15_35_1.png "画像")
+
 =======
 ＊個人情報はダミーを利用しています
 
