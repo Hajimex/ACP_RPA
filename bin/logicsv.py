@@ -5,6 +5,9 @@ import csv
 import pandas as pd
 import codecs
 import math
+# parent_dir_name = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+# sys.path.append(parent_dir_name + "/src")
+# import logicsv
 
 def Read_File(f):
 	file_path = "data/" + f
@@ -90,27 +93,45 @@ def If_Test(df,test_names,test_products):
 
 	return df
 
+def Interface(df,interface):
+	print("interface",interface)
+	if interface == "short":
+		df = df.drop(["Email","Financial Status","Paid at","Fulfillment Status",
+			"Fulfilled at","Accepts Marketing","Currency","Subtotal","Shipping",
+			"Taxes","Total","Discount Code","Discount Amount","Created at",
+			"Lineitem quantity","Lineitem name","Lineitem price","Lineitem compare at price",
+			"Lineitem sku","Lineitem requires shipping","Lineitem taxable","Lineitem fulfillment status",
+			"Billing Name","Billing Street","Billing Address1","Billing Address2","Billing Company",
+			"Billing City","Billing Zip","Billing Province","Billing Country","Billing Phone",
+			"Note Attributes","Cancelled at","Payment Method","Payment Reference","Refunded Amount",
+			"Vendor","Id","Tags","Risk Level","Source","Lineitem discount"], axis=1)
+	return df
+
 def Output(df):
 	df.to_csv("output.sjis.csv", encoding="shift_jis", index=False)
 	return df
 
-def main(f,test_names,test_products,yupacket_products):
+def main(f,test_names,test_products,yupacket_products,interface):
 	df = Read_File(f)
 	df = Shipping_Method(df,yupacket_products)
 	df = Validate_Address(df)
 	df = If_Test(df,test_names,test_products)
+	df = Interface(df,interface)
 	df = Output(df)
-	# hello()
+	
+	# logicsv.hello1()
 
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser(description='enter the value')
 	parser.add_argument('--file', help='file name')
+	parser.add_argument('--interface', help='interface style')
 
 	test_names = [u"テスト"]
 	test_products = ["SFwtest","SFwtests"]
 	yupacket_products = ["SFwo002s"]
 	args = parser.parse_args()
 	print("args.file",args.file)
+	print("args.interface",args.interface)
 
-	main(args.file,test_names,test_products,yupacket_products)
+	main(args.file,test_names,test_products,yupacket_products,args.interface)
